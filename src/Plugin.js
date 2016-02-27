@@ -18,7 +18,7 @@ export default class ExportLocales {
 
   apply(compiler) {
     compiler.plugin('this-compilation', (compilation) => {
-      compilation.plugin('translate-maker-loader', (loaderContext) => {
+      compilation.plugin('normal-module-loader', (loaderContext) => {
         loaderContext.addExtractedLocale = this.addExtractedLocale;
       });
     });
