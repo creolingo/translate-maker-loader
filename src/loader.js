@@ -50,7 +50,7 @@ export default function loader() {
     const result = `module.exports = ${jsonContent};`;
 
     if (!addExtractedLocale) {
-      callback(null, result);
+      return callback(null, result);
     }
 
     addExtractedLocale(locales, propertyName, (err3) => {
