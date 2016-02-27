@@ -1,0 +1,7 @@
+dist
+node_modules
+documentation
+example
+controllers
+tests
+coverage
