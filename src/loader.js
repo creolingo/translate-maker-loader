@@ -46,13 +46,17 @@ export default function loader() {
     const propertyName = getLocalIdent(dir, localIdentName);
     const value = combine(locales, propertyName);
 
+    const jsonContent = JSON.stringify(value, undefined, '\t');
+    const result = `module.exports = ${jsonContent};`;
+
+    if (!addExtractedLocale) {
+      callback(null, result);
+    }
+
     addExtractedLocale(locales, propertyName, (err3) => {
       if (err3) {
         return callback(err3);
       }
-
-      const jsonContent = JSON.stringify(value, undefined, '\t');
-      const result = `module.exports = ${jsonContent};`;
 
       callback(null, result);
     });
