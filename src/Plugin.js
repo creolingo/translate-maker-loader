@@ -3,18 +3,23 @@ export default class ExportLocales {
     this._options = options;
 
     this.apply = this.apply.bind(this);
+    this.addExtractedLocale = this.addExtractedLocale.bind(this);
   }
 
   getOptions() {
     return this._options;
   }
 
-  apply(compiler) {
+  addExtractedLocale(locales, propertyName) {
     const options = this.getOptions();
 
+    console.log(propertyName, locales);
+  }
+
+  apply(compiler) {
     compiler.plugin('this-compilation', (compilation) => {
-      compilation.plugin('translate-maker-loader', (loaderContext, module) => {
-        console.log(module);
+      compilation.plugin('translate-maker-loader', (loaderContext) => {
+        loaderContext.addExtractedLocale = this.addExtractedLocale;
       });
     });
   }

@@ -9,7 +9,7 @@ const processed = {};
 
 export default function loader() {
   const callback = this.async();
-  const { resourcePath, query = {} } = this;
+  const { resourcePath, query = {}, addExtractedLocale } = this;
   const resolvedPath = path.resolve(resourcePath);
 
   const locales = {};
@@ -49,6 +49,8 @@ export default function loader() {
     const localIdentName = query.localIdentName || '[name]_[hash:base64]';
     const propertyName = getLocalIdent(dir, localIdentName);
     const value = combine(locales, propertyName);
+
+    addExtractedLocale(locales, propertyName);
 
     const jsonContent = JSON.stringify(value, undefined, '\t');
     const result = `module.exports = ${jsonContent};`;
