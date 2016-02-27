@@ -1,5 +1,8 @@
-import merge from 'lodash/merge';
+// import merge from 'lodash/merge';
+import get from 'lodash/get';
 import fs from 'fs';
+import mkdirp from 'mkdirp';
+import { each } from 'async';
 
 export default class ExportLocales {
   constructor(options = {}) {
@@ -14,7 +17,7 @@ export default class ExportLocales {
     return this._options;
   }
 
-  addExtractedLocale(extractedLocales, propertyName) {
+  addExtractedLocale(extractedLocales, propertyName, callback) {
     const locales = this._locales;
 
     Object.keys(extractedLocales).forEach((locale) => {
@@ -27,30 +30,34 @@ export default class ExportLocales {
       currentLocale[propertyName] = extracted;
     });
 
-    this.save();
+    this.save(callback);
   }
 
-  save() {
-    const options = this.getOptions();
+  save(callback) {
+    const options = this._options;
+    const compiler = this._compiler;
     const locales = this._locales;
+    const mainDir = options.path || get(compiler, 'options.output.path') || '.';
 
-    const mainDir = options.path || '.';
+    mkdirp(mainDir, (err) => {
+      if (err) {
+        callback(err);
+      }
 
-    Object.keys(locales).forEach((locale) => {
-      const filePath = mainDir + '/' + locale + '.js';
+      each(Object.keys(locales), (locale, cb) => {
+        const filePath = mainDir + '/' + locale + '.js';
 
-      const jsonContent = JSON.stringify(locales[locale], undefined, '\t');
-      const result = `module.exports = ${jsonContent};`;
+        const jsonContent = JSON.stringify(locales[locale], undefined, '\t');
+        const result = `module.exports = ${jsonContent};`;
 
-      fs.writeFile(filePath, result, { flag: 'w+' }, (err) => {
-        if (err) {
-          throw err;
-        }
-      });
+        fs.writeFile(filePath, result, { flag: 'w+' }, cb);
+      }, callback);
     });
   }
 
   apply(compiler) {
+    this._compiler = compiler;
+
     compiler.plugin('this-compilation', (compilation) => {
       compilation.plugin('normal-module-loader', (loaderContext) => {
         loaderContext.addExtractedLocale = this.addExtractedLocale;

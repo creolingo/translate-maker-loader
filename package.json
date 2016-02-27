@@ -1,6 +1,6 @@
 {
   "name": "translate-maker-loader",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Locale loader module for webpack",
   "author": {
     "name": "Zlatko Fedor",
@@ -37,7 +37,8 @@
   "dependencies": {
     "async": "^1.5.2",
     "babel-core": "^6.5.2",
-    "lodash": "^4.5.1"
+    "lodash": "^4.5.1",
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",

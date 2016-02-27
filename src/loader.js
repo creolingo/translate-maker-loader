@@ -5,8 +5,6 @@ import walk from './walk';
 import combine from './combine';
 import getLocalIdent from './getLocalIdent';
 
-const processed = {};
-
 export default function loader() {
   const callback = this.async();
   const { resourcePath, query = {}, addExtractedLocale } = this;
@@ -44,17 +42,19 @@ export default function loader() {
       return callback(err2);
     }
 
-    processed[dir] = locales;
-
     const localIdentName = query.localIdentName || '[name]_[hash:base64]';
     const propertyName = getLocalIdent(dir, localIdentName);
     const value = combine(locales, propertyName);
 
-    addExtractedLocale(locales, propertyName);
+    addExtractedLocale(locales, propertyName, (err3) => {
+      if (err3) {
+        return callback(err3);
+      }
 
-    const jsonContent = JSON.stringify(value, undefined, '\t');
-    const result = `module.exports = ${jsonContent};`;
+      const jsonContent = JSON.stringify(value, undefined, '\t');
+      const result = `module.exports = ${jsonContent};`;
 
-    callback(null, result);
+      callback(null, result);
+    });
   });
 }
