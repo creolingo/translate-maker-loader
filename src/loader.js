@@ -7,10 +7,21 @@ import getLocalIdent from './getLocalIdent';
 import { parseQuery } from 'loader-utils';
 import validateObject from './validateObject';
 
+const DEFAULT_QUERY = {
+  defaultValue: true,
+  babel: {
+    presets: ['es2015'],
+  },
+};
+
+
 export default function loader() {
   const callback = this.async();
   const { resourcePath, addExtractedLocale } = this;
-  const query = parseQuery(this.query || '?');
+  const query = {
+    ...DEFAULT_QUERY,
+    ...parseQuery(this.query || '?'),
+  };
   const resolvedPath = path.resolve(resourcePath);
 
   const emitter = query.emitErrors ? this.emitError : this.emitWarning;
@@ -18,9 +29,7 @@ export default function loader() {
   const locales = {};
   const { dir } = path.parse(resolvedPath);
   walk(dir, (fileContent, filePath, cb) => {
-    const babelQuery = query.babel || {
-      presets: ['es2015'],
-    };
+    const babelQuery = query.babel;
     const result = transform(fileContent, babelQuery);
 
     const timestamp = new Date().getTime(); // TODO replace with puid

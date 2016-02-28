@@ -25,7 +25,7 @@ export default function validateObject(obj, query, emitter, path) {
     used[propertyName] = true;
     used[propertyNameDefault] = true;
 
-    if (query.defaultValue && keys.indexOf(propertyNameDefault) === -1) {
+    if (query.defaultValue && query.defaultLocale && keys.indexOf(propertyNameDefault) === -1) {
       const firstDotPos = newPath.indexOf('.');
       emitter('Missing default value: ' + newPath.substr(firstDotPos + 1));
     }
