@@ -9,6 +9,8 @@ describe('Loader', () => {
       query: '?' + qs.stringify({
         localIdentName: '[name]_[hash:base64:7]',
         path: __dirname + '/output',
+        defaultLocale: 'en_US',
+        defaultValue: true,
         babel: {
           presets: ['es2015'],
         },

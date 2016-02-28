@@ -46,7 +46,7 @@ export default function loader() {
 
     const localIdentName = query.localIdentName || '[name]_[hash:base64:5]';
     const propertyName = getLocalIdent(dir, localIdentName);
-    const value = combine(locales, propertyName);
+    const value = combine(locales, propertyName, query);
 
     const jsonContent = JSON.stringify(value, undefined, '\t');
     const result = `module.exports = ${jsonContent};`;
