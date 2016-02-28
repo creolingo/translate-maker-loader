@@ -16,7 +16,7 @@ const Extension = {
 };
 
 const DEFAULT_OPTIONS = {
-  format: Format.JS,
+  format: Format.JSON,
 };
 
 export default class ExportLocales {
