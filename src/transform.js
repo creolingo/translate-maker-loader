@@ -1,6 +1,6 @@
 import isPlainObject from 'lodash/isPlainObject';
 
-export default function transform(obj, path, options = {}) {
+export default function transform(obj, path, options, addDefaultValue) {
   if (!isPlainObject(obj)) {
     return path;
   }
@@ -21,14 +21,14 @@ export default function transform(obj, path, options = {}) {
 
       newObj[before] = transform({
         [after]: propertyValue,
-      }, newPath, options);
+      }, newPath, options, addDefaultValue);
       return;
     }
 
     const newPath = path ? `${path}.${propertyName}` : propertyName;
-    newObj[propertyName] = transform(propertyValue, newPath, options);
+    newObj[propertyName] = transform(propertyValue, newPath, options, addDefaultValue);
 
-    if (options.defaultValue && options.defaultValuePropertyName && !isPlainObject(propertyValue)) {
+    if (addDefaultValue && options.defaultValue && options.defaultValuePropertyName && !isPlainObject(propertyValue)) {
       const propertyNameDefaultValue = options.defaultValuePropertyName.replace('[name]', propertyName);
       newObj[propertyNameDefaultValue] = propertyValue;
     }

@@ -11,6 +11,7 @@ const DEFAULT_QUERY = {
   localIdentName: '[name]_[hash:base64:5]',
   defaultValue: true,
   defaultValuePropertyName: '_[name]',
+  transform: (value) => value,
   babel: {
     presets: ['es2015'],
   },

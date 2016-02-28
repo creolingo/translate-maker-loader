@@ -4,12 +4,12 @@ import transform from './transform';
 export default function combine(locales, propertyName, options = {}) {
   const obj = {};
   const transformedDefaultLocale = options.defaultLocale && locales[options.defaultLocale]
-    ? transform(locales[options.defaultLocale], propertyName, options)
+    ? transform(locales[options.defaultLocale], propertyName, options, true)
     : null;
 
   Object.keys(locales).forEach((locale) => {
     const localeObj = locales[locale];
-    const transformedObj = transform(localeObj, propertyName);
+    const transformedObj = transform(localeObj, propertyName, options);
 
     if (transformedDefaultLocale) {
       merge(obj, transformedDefaultLocale, transformedObj);
