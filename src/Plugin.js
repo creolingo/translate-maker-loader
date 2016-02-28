@@ -17,6 +17,7 @@ const Extension = {
 
 const DEFAULT_OPTIONS = {
   format: Format.JSON,
+  encoding: 'utf-8',
 };
 
 export default class ExportLocales {
@@ -57,7 +58,7 @@ export default class ExportLocales {
     const locales = this._locales;
     const mainDir = options.path || get(compiler, 'options.output.path') || '.';
 
-    const { format } = options;
+    const { format, encoding } = options;
     const ext = Extension[format];
 
     mkdirp(mainDir, (err) => {
@@ -72,12 +73,15 @@ export default class ExportLocales {
           ? `module.exports = ${jsonContent};`
           : jsonContent;
 
-        fs.readFile(filePath, (err2, currentContent) => {
+        fs.readFile(filePath, encoding, (err2, currentContent) => {
           if (!err2 && currentContent === result) {
             return cb();
           }
 
-          fs.writeFile(filePath, result, { flag: 'w+' }, cb);
+          fs.writeFile(filePath, result, {
+            flag: 'w+',
+            encoding,
+          }, cb);
         });
       }, callback);
     });
