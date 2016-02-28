@@ -1,7 +1,7 @@
 import isPlainObject from 'lodash/isPlainObject';
 import sortBy from 'lodash/sortBy';
 
-export default function validateObject(obj, query, emitter, path) {
+export default function validateObject(obj, query, emitter, dir, path) {
   if (!isPlainObject(obj)) {
     return;
   }
@@ -17,7 +17,7 @@ export default function validateObject(obj, query, emitter, path) {
     const value = obj[propertyName];
 
     if (isPlainObject(value)) {
-      validateObject(value, query, emitter, newPath);
+      validateObject(value, query, emitter, dir, newPath);
       return;
     }
 
@@ -27,7 +27,7 @@ export default function validateObject(obj, query, emitter, path) {
 
     if (query.defaultValue && query.defaultLocale && keys.indexOf(propertyNameDefault) === -1) {
       const firstDotPos = newPath.indexOf('.');
-      emitter('Missing default value: ' + newPath.substr(firstDotPos + 1));
+      emitter(`Missing default value: ${newPath.substr(firstDotPos + 1)} in ${dir}/${query.defaultLocale}.js`);
     }
   });
 }

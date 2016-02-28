@@ -60,7 +60,7 @@ export default function loader() {
     const propertyName = getLocalIdent(dir, localIdentName);
     const value = combine(locales, propertyName, query);
 
-    validateObject(value, query, emitter);
+    validateObject(value, query, emitter, dir);
 
     const jsonContent = JSON.stringify(value, undefined, '\t');
     const result = `module.exports = ${jsonContent};`;
