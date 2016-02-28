@@ -1,5 +1,4 @@
 import isPlainObject from 'lodash/isPlainObject';
-import get from 'lodash/get';
 
 export default function transform(obj, path = '', addDefaultValue) {
   if (!isPlainObject(obj)) {

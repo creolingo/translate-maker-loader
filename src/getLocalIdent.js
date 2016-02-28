@@ -13,7 +13,7 @@ function getPath(filepath) {
 
 export default function getLocalIdent(filepath, type) {
   return interpolateName({
-    resourcePath: getPath(filepath),
+    resourcePath: getPath(filepath) + '.js', // ext is required in the interpolateName
   }, type, {
     content: filepath,
   });
