@@ -5,12 +5,15 @@ import walk from './walk';
 import combine from './combine';
 import getLocalIdent from './getLocalIdent';
 import { parseQuery } from 'loader-utils';
+import validateObject from './validateObject';
 
 export default function loader() {
   const callback = this.async();
   const { resourcePath, addExtractedLocale } = this;
   const query = parseQuery(this.query || '?');
   const resolvedPath = path.resolve(resourcePath);
+
+  const emitter = query.emitErrors ? this.emitError : this.emitWarning;
 
   const locales = {};
   const { dir } = path.parse(resolvedPath);
@@ -47,6 +50,8 @@ export default function loader() {
     const localIdentName = query.localIdentName || '[name]_[hash:base64:5]';
     const propertyName = getLocalIdent(dir, localIdentName);
     const value = combine(locales, propertyName, query);
+
+    validateObject(value, query, emitter);
 
     const jsonContent = JSON.stringify(value, undefined, '\t');
     const result = `module.exports = ${jsonContent};`;

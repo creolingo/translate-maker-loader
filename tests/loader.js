@@ -25,6 +25,8 @@ describe('Loader', () => {
         console.log(result);
         done();
       },
+      emitWarning: (message) => console.log('WARNING: ' + message),
+      emitError: (message) => console.log('ERROR: ' + message),
     });
   });
 });

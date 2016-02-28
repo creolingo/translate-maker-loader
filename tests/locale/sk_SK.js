@@ -5,5 +5,6 @@ export default {
   },
   "parent1.parent2.parent3": {
     child: 'Dieta',
+    missingEnglishTranslation: 'Nieje definovana',
   }
 };
