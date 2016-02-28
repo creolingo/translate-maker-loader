@@ -4,10 +4,12 @@ import { transform } from 'babel-core';
 import walk from './walk';
 import combine from './combine';
 import getLocalIdent from './getLocalIdent';
+import { parseQuery } from 'loader-utils';
 
 export default function loader() {
   const callback = this.async();
-  const { resourcePath, query = {}, addExtractedLocale } = this;
+  const { resourcePath, addExtractedLocale } = this;
+  const query = parseQuery(this.query || '?');
   const resolvedPath = path.resolve(resourcePath);
 
   const locales = {};
@@ -42,7 +44,7 @@ export default function loader() {
       return callback(err2);
     }
 
-    const localIdentName = query.localIdentName || '[name]_[hash:base64]';
+    const localIdentName = query.localIdentName || '[name]_[hash:base64:5]';
     const propertyName = getLocalIdent(dir, localIdentName);
     const value = combine(locales, propertyName);
 

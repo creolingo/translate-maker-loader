@@ -38,7 +38,8 @@
     "async": "^1.5.2",
     "babel-core": "^6.5.2",
     "lodash": "^4.5.1",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "loader-utils": "^0.2.12"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
@@ -57,7 +58,8 @@
     "gulp-coveralls": "^0.1.4",
     "gulp-jsx-coverage": "^0.3.8",
     "gulp-util": "^3.0.7",
-    "should": "^8.0.2"
+    "should": "^8.0.2",
+    "qs": "^6.1.0"
   },
   "bugs": {
     "url": "https://github.com/CherryProjects/translate-maker-loader/issues"
