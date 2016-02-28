@@ -18,7 +18,5 @@ export default function combine(locales, propertyName, options = {}) {
     }
   });
 
-  return {
-    [propertyName]: obj,
-  };
+  return obj;
 }
