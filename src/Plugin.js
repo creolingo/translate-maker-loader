@@ -72,7 +72,13 @@ export default class ExportLocales {
           ? `module.exports = ${jsonContent};`
           : jsonContent;
 
-        fs.writeFile(filePath, result, { flag: 'w+' }, cb);
+        fs.readFile(filePath, (err2, currentContent) => {
+          if (!err2 && currentContent === result) {
+            return cb();
+          }
+
+          fs.writeFile(filePath, result, { flag: 'w+' }, cb);
+        });
       }, callback);
     });
   }
