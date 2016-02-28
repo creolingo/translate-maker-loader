@@ -21,13 +21,16 @@ export default function validateObject(obj, query, emitter, dir, path) {
       return;
     }
 
-    const propertyNameDefault = propertyName + 'DefaultValue';
     used[propertyName] = true;
-    used[propertyNameDefault] = true;
 
-    if (query.defaultValue && query.defaultLocale && keys.indexOf(propertyNameDefault) === -1) {
-      const firstDotPos = newPath.indexOf('.');
-      emitter(`Missing default value: ${newPath.substr(firstDotPos + 1)} in ${dir}/${query.defaultLocale}.js`);
+    if (query.defaultValue && query.defaultLocale && query.defaultValuePropertyName) {
+      const propertyNameDefault = query.defaultValuePropertyName.replace('[name]', propertyName);
+      used[propertyNameDefault] = true;
+
+      if (keys.indexOf(propertyNameDefault) === -1) {
+        const firstDotPos = newPath.indexOf('.');
+        emitter(`Missing default value: ${newPath.substr(firstDotPos + 1)} in ${dir}/${query.defaultLocale}.js`);
+      }
     }
   });
 }

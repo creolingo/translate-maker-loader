@@ -4,7 +4,7 @@ import transform from './transform';
 export default function combine(locales, propertyName, options = {}) {
   const obj = {};
   const transformedDefaultLocale = options.defaultLocale && locales[options.defaultLocale]
-    ? transform(locales[options.defaultLocale], propertyName, options.defaultValue)
+    ? transform(locales[options.defaultLocale], propertyName, options)
     : null;
 
   Object.keys(locales).forEach((locale) => {

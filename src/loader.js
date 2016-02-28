@@ -8,12 +8,13 @@ import { parseQuery } from 'loader-utils';
 import validateObject from './validateObject';
 
 const DEFAULT_QUERY = {
+  localIdentName: '[name]_[hash:base64:5]',
   defaultValue: true,
+  defaultValuePropertyName: '_[name]',
   babel: {
     presets: ['es2015'],
   },
 };
-
 
 export default function loader() {
   const callback = this.async();
@@ -56,7 +57,7 @@ export default function loader() {
       return callback(err2);
     }
 
-    const localIdentName = query.localIdentName || '[name]_[hash:base64:5]';
+    const localIdentName = query.localIdentName;
     const propertyName = getLocalIdent(dir, localIdentName);
     const value = combine(locales, propertyName, query);
 
