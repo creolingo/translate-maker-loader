@@ -3,10 +3,28 @@ import get from 'lodash/get';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import { each } from 'async';
+import keymirror from 'keymirror';
+
+export const Format = keymirror({
+  JS: null,
+  JSON: null,
+});
+
+const Extension = {
+  [Format.JS]: '.js',
+  [Format.JSON]: '.json',
+};
+
+const DEFAULT_OPTIONS = {
+  format: Format.JS,
+};
 
 export default class ExportLocales {
   constructor(options = {}) {
-    this._options = options;
+    this._options = {
+      ...DEFAULT_OPTIONS,
+      ...options,
+    };
     this._locales = {};
 
     this.apply = this.apply.bind(this);
@@ -39,16 +57,20 @@ export default class ExportLocales {
     const locales = this._locales;
     const mainDir = options.path || get(compiler, 'options.output.path') || '.';
 
+    const { format } = options;
+    const ext = Extension[format];
+
     mkdirp(mainDir, (err) => {
       if (err) {
         callback(err);
       }
 
       each(Object.keys(locales), (locale, cb) => {
-        const filePath = mainDir + '/' + locale + '.js';
-
-        const jsonContent = JSON.stringify(locales[locale], undefined, '\t');
-        const result = `module.exports = ${jsonContent};`;
+        const filePath = mainDir + '/' + locale + ext;
+        const jsonContent = JSON.stringify(locales[locale], void 0, 2);
+        const result = format === Format.JS
+          ? `module.exports = ${jsonContent};`
+          : jsonContent;
 
         fs.writeFile(filePath, result, { flag: 'w+' }, cb);
       }, callback);
