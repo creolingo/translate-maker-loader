@@ -8,7 +8,7 @@ describe('Loader', () => {
   it('should be able to parse locales', (done) => {
     loader.call({
       query: '?' + qs.stringify({
-        format: ResponseFormat.PATH,
+        format: ResponseFormat.FUNCTION,
         localIdentName: '[name]_[hash:base64:7]',
         path: __dirname + '/output',
         defaultLocale: 'en_US',
