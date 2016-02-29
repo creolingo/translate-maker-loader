@@ -2,15 +2,16 @@ import should from 'should';
 import loader, { ExtractLocales } from '../src';
 import path from 'path';
 import qs from 'qs';
+import ResponseFormat from '../src/constants/ResponseFormat';
 
 describe('Loader', () => {
   it('should be able to parse locales', (done) => {
     loader.call({
       query: '?' + qs.stringify({
+        format: ResponseFormat.PATH,
         localIdentName: '[name]_[hash:base64:7]',
         path: __dirname + '/output',
         defaultLocale: 'en_US',
-        defaultValue: true,
         babel: {
           presets: ['es2015'],
         },
