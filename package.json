@@ -68,7 +68,7 @@
     "should": "^8.1.1",
     "coveralls": "^2.11.6",
     "isparta": "^4.0.0",
-    "translate-maker": "0.3.3",
+    "translate-maker": "0.3.4",
     "qs": "^6.1.0"
   }
 }
