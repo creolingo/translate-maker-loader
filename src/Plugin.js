@@ -74,7 +74,7 @@ export default class ExportLocales {
       const localeKeys = Object.keys(locales);
       localeKeys.sort(); // always same result
 
-      each(Object.keys(localeKeys), (locale, cb) => {
+      each(localeKeys, (locale, cb) => {
         const filePath = mainDir + '/' + locale + ext;
         const jsonContent = JSON.stringify(locales[locale], void 0, 2);
         const result = format === Format.JS
