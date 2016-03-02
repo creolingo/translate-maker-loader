@@ -44,7 +44,7 @@ export default class ExportLocales {
         locales[locale.id] = {};
       }
 
-      const currentLocale = locales[locale];
+      const currentLocale = locales[locale.id];
       currentLocale[propertyName] = locale.data;
     });
 
