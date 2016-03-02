@@ -18,6 +18,7 @@ const Extension = {
 const DEFAULT_OPTIONS = {
   format: Format.JSON,
   encoding: 'utf-8',
+  saveImmediately: true,
 };
 
 export default class ExportLocales {
@@ -48,6 +49,11 @@ export default class ExportLocales {
       currentLocale[propertyName] = locale.data;
     });
 
+    const options = this.getOptions();
+    if (!options.saveImmediately) {
+      return callback();
+    }
+
     this.save(callback);
   }
 
@@ -65,7 +71,10 @@ export default class ExportLocales {
         callback(err);
       }
 
-      each(Object.keys(locales), (locale, cb) => {
+      const localeKeys = Object.keys(locales);
+      localeKeys.sort(); // always same result
+
+      each(Object.keys(localeKeys), (locale, cb) => {
         const filePath = mainDir + '/' + locale + ext;
         const jsonContent = JSON.stringify(locales[locale], void 0, 2);
         const result = format === Format.JS
@@ -87,6 +96,7 @@ export default class ExportLocales {
   }
 
   apply(compiler) {
+    const options = this.getOptions();
     this._compiler = compiler;
 
     compiler.plugin('this-compilation', (compilation) => {
@@ -95,8 +105,11 @@ export default class ExportLocales {
       });
 
       compilation.plugin('additional-assets', (callback) => {
-        // this.save(callback);
-        callback();
+        if (options.saveImmediately) {
+          return callback();
+        }
+
+        return this.save(callback);
       });
     });
   }
