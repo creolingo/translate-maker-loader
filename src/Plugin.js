@@ -39,14 +39,13 @@ export default class ExportLocales {
   addExtractedLocale(extractedLocales, propertyName, callback) {
     const locales = this._locales;
 
-    Object.keys(extractedLocales).forEach((locale) => {
-      const extracted = extractedLocales[locale];
-      if (!locales[locale]) {
-        locales[locale] = {};
+    extractedLocales.forEach((locale) => {
+      if (!locales[locale.id]) {
+        locales[locale.id] = {};
       }
 
       const currentLocale = locales[locale];
-      currentLocale[propertyName] = extracted;
+      currentLocale[propertyName] = locale.data;
     });
 
     this.save(callback);
@@ -93,6 +92,11 @@ export default class ExportLocales {
     compiler.plugin('this-compilation', (compilation) => {
       compilation.plugin('normal-module-loader', (loaderContext) => {
         loaderContext.addExtractedLocale = this.addExtractedLocale;
+      });
+
+      compilation.plugin('additional-assets', (callback) => {
+        // this.save(callback);
+        callback();
       });
     });
   }
