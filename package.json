@@ -1,6 +1,6 @@
 {
   "name": "translate-maker-loader",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Locale loader module for webpack",
   "author": {
     "name": "Zlatko Fedor",

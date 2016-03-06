@@ -1,6 +1,6 @@
 import dropRightWhile from 'lodash/dropRightWhile';
 import path from 'path';
-import { interpolateName } from 'loader-utils';
+import { interpolateName, stringifyRequest } from 'loader-utils';
 
 const LOCALE_DIRNAME = 'locale';
 
@@ -11,9 +11,12 @@ function getPath(filepath) {
   return dropRightWhile(parts, (part) => part === LOCALE_DIRNAME).join('/');
 }
 
-export default function getLocalIdent(filepath, type) {
+export default function getLocalIdent(context, filepath, type) {
+  // ext is required in the interpolateName
+  const resourcePath = stringifyRequest(context, getPath(filepath) + '.js');
+
   return interpolateName({
-    resourcePath: getPath(filepath) + '.js', // ext is required in the interpolateName
+    resourcePath,
   }, type, {
     content: filepath,
   });
