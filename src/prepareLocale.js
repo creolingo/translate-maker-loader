@@ -16,8 +16,7 @@ export default function prepareLocale(obj, prefix, format, defaultLocale, path) 
       const defaultValueCode = defaultValue
         ? `defaultValue || ${JSON.stringify(defaultValue)}`
         : 'defaultValue';
-      return `function (args, defaultValue) {
-        var translateMaker = module.exports._translateMaker || require('translate-maker').getInstance();
+      return `function (translateMaker, args, defaultValue) {
         return translateMaker.get(${JSON.stringify(pathWithPrefix)}, args, ${defaultValueCode});
       }`;
     }

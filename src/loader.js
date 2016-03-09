@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs';
 import { transform } from 'babel-core';
 import walk from './walk';
 import getLocalIdent from './getLocalIdent';
@@ -9,6 +8,7 @@ import normalizeLocale from './normalizeLocale';
 import generateResponse from './generateResponse';
 import ResponseFormat from './constants/ResponseFormat';
 import prepareLocale from './prepareLocale';
+import requireFromString from 'require-from-string';
 
 const DEFAULT_QUERY = {
   defaultLocale: null,
@@ -43,24 +43,15 @@ export default function loader() {
     // mark file as project file
     this.addDependency(filePath);
 
-    // TODO find how to do that without file save
-    fs.writeFile(tempPath, result.code, { flag: 'w+' }, (err2) => {
-      if (err2) {
-        return cb(err2);
-      }
-
-      const content = require(tempPath);
-      fs.unlinkSync(tempPath);
-
-      const { name } = path.parse(filePath);
-      locales.push({
-        id: name,
-        path: filePath,
-        data: content.default ? content.default : content,
-      });
-
-      cb(null);
+    const content = requireFromString(result.code);
+    const { name } = path.parse(filePath);
+    locales.push({
+      id: name,
+      path: filePath,
+      data: content.default && Object.keys(content).length === 1 ? content.default : content,
     });
+
+    cb(null);
   }, (err2) => {
     if (err2) {
       return callback(err2);
