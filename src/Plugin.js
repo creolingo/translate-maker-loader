@@ -4,6 +4,7 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 import { each } from 'async';
 import keymirror from 'keymirror';
+import stringify from 'json-stable-stringify';
 
 export const Format = keymirror({
   JS: null,
@@ -76,7 +77,9 @@ export default class ExportLocales {
 
       each(localeKeys, (locale, cb) => {
         const filePath = mainDir + '/' + locale + ext;
-        const jsonContent = JSON.stringify(locales[locale], void 0, 2);
+        const jsonContent = stringify(locales[locale], {
+          space: 2,
+        });
         const result = format === Format.JS
           ? `module.exports = ${jsonContent};`
           : jsonContent;

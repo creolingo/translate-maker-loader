@@ -18,7 +18,7 @@ export default function getLocalIdent(loaderContext, filepath, type) {
     : loaderContext.context;
 
   const filePathJS = getPath(filepath) + '.js';
-  const resourcePath = path.relative(context, filePathJS);
+  const resourcePath = path.relative(typeof context !== 'undefined' ? context : '.', filePathJS);
 
   return interpolateName({
     resourcePath,

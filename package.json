@@ -1,6 +1,6 @@
 {
   "name": "translate-maker-loader",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Locale loader module for webpack",
   "author": {
     "name": "Zlatko Fedor",
@@ -43,7 +43,8 @@
     "mkdirp": "^0.5.1",
     "loader-utils": "^0.2.12",
     "keymirror": "^0.1.1",
-    "require-from-string": "^1.1.0"
+    "require-from-string": "^1.1.0",
+    "json-stable-stringify": "^1.0.1"
   },
   "peerDependencies": {
     "babel-core": "6.x"
