@@ -36,7 +36,7 @@ export default class ExportLocales {
     return this._options;
   }
 
-  addExtractedLocale(extractedLocales, propertyName) {
+  addExtractedLocale = (extractedLocales, propertyName) => {
     const locales = this._locales;
 
     extractedLocales.forEach((locale) => {
@@ -52,6 +52,8 @@ export default class ExportLocales {
     if (!options.saveImmediately) {
       return;
     }
+
+    console.log('SAVEEEE****');
 
     this.save();
   }
@@ -103,15 +105,17 @@ export default class ExportLocales {
 
     compiler.plugin('this-compilation', (compilation) => {
       compilation.plugin('normal-module-loader', (loaderContext) => {
-        loaderContext.addExtractedLocale = ::this.addExtractedLocale;
+        loaderContext.addExtractedLocale = this.addExtractedLocale;
       });
 
       compilation.plugin('additional-assets', (callback) => {
         if (options.saveImmediately) {
-          return callback();
+          callback();
+          return;
         }
 
-        return this.save(callback);
+        this.save();
+        callback();
       });
     });
   }
