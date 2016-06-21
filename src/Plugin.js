@@ -53,8 +53,6 @@ export default class ExportLocales {
       return;
     }
 
-    console.log('SAVEEEE****');
-
     this.save();
   }
 
