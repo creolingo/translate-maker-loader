@@ -1,6 +1,7 @@
 import path from 'path';
+import fs from 'fs';
 import { transform } from 'babel-core';
-import walk from './walk';
+import walk from 'walkdir';
 import getLocalIdent from './getLocalIdent';
 import { parseQuery } from 'loader-utils';
 import mergeLocales from './mergeLocales';
@@ -15,13 +16,14 @@ const DEFAULT_QUERY = {
   localIdentName: '[name]_[hash:base64:5]',
   format: ResponseFormat.PATH,
   normalize: true,
+  ext: '.js',
   babel: {
     presets: ['es2015'],
   },
 };
 
 export default function loader() {
-  const callback = this.async();
+  //const callback = this.async();
   const { resourcePath, addExtractedLocale } = this;
   const options = {
     ...DEFAULT_QUERY,
@@ -33,12 +35,73 @@ export default function loader() {
 
   const locales = [];
   const { dir } = path.parse(resolvedPath);
-  walk(dir, (fileContent, filePath, cb) => {
+
+  walk.sync(dir, (filePath, stats) => {
+    if (!stats.isFile()) {
+      return;
+    }
+
+    const { name, ext } = path.parse(filePath);
+    if (options.ext && ext !== options.ext) {
+      return;
+    }
+
+    // mark file as project file
+    this.addDependency(filePath);
+
+    const babelQuery = options.babel;
+    const fileContent = fs.readFileSync(filePath, { encoding: 'utf8' });
+    const result = transform(fileContent, babelQuery);
+    const content = requireFromString(result.code);
+
+    locales.push({
+      id: name,
+      path: filePath,
+      data: content.default && Object.keys(content).length === 1
+        ? content.default
+        : content,
+    });
+  });
+
+  if (!locales.length) {
+    return generateResponse({}, options.format);
+  }
+
+  // normalize locales
+  if (options.normalize) {
+    locales.forEach((locale) => {
+      locale.data = normalizeLocale(locale.data);
+    });
+  }
+
+  // create one big locale merged from all locales, check missing translations and type errors
+  const mergedLocale = mergeLocales(locales, emitter);
+
+  const localIdentName = options.localIdentName;
+  const prefix = getLocalIdent(this, dir, localIdentName);
+  const defaultLocale = locales.find((locale) => locale.id === options.defaultLocale);
+  const value = prepareLocale(mergedLocale, prefix, options.format, defaultLocale.data);
+
+  const response = generateResponse(value, options.format);
+  if (addExtractedLocale) {
+    addExtractedLocale(locales, prefix);
+  }
+
+  return response;
+
+
+
+
+
+
+
+
+
+
+  console.log(123);
+  /*walk(dir, (fileContent, filePath, cb) => {
     const babelQuery = options.babel;
     const result = transform(fileContent, babelQuery);
-
-    const timestamp = new Date().getTime(); // TODO replace with puid
-    const tempPath = __dirname + `/temp-${timestamp}.js`;
 
     // mark file as project file
     this.addDependency(filePath);
@@ -54,12 +117,14 @@ export default function loader() {
     cb(null);
   }, (err2) => {
     if (err2) {
-      return callback(err2);
+      callback(err2);
+      return;
     }
 
     if (!locales.length) {
       const content = generateResponse({}, options.format);
-      return callback(null, content);
+      callback(null, content);
+      return;
     }
 
     // normalize locales
@@ -79,15 +144,17 @@ export default function loader() {
 
     const response = generateResponse(value, options.format);
     if (!addExtractedLocale) {
-      return callback(null, response);
+      callback(null, response);
+      return;
     }
 
     addExtractedLocale(locales, prefix, (err3) => {
       if (err3) {
-        return callback(err3);
+        callback(err3);
+        return;
       }
 
       callback(null, response);
     });
-  });
+  });*/
 }

@@ -6,7 +6,7 @@ import ResponseFormat from '../src/constants/ResponseFormat';
 
 describe('Loader', () => {
   it('should be able to parse locales', (done) => {
-    loader.call({
+    const result = loader.call({
       query: '?' + qs.stringify({
         format: ResponseFormat.FUNCTION,
         localIdentName: '[name]_[hash:base64:7]',
@@ -20,14 +20,11 @@ describe('Loader', () => {
         console.log('Dependecy: ' + file);
       },
       resourcePath: path.resolve(__dirname + '/locale/locale'),
-      async: () => function callback(err, result) {
-        if (err) throw err;
-
-        console.log(result);
-        done();
-      },
       emitWarning: (message) => console.log('WARNING: ' + message),
       emitError: (message) => console.log('ERROR: ' + message),
     });
+
+    console.log(result);
+    done();
   });
 });
