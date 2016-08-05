@@ -20,6 +20,7 @@ const DEFAULT_OPTIONS = {
   format: Format.JSON,
   encoding: 'utf-8',
   saveImmediately: true,
+  eslint: true,
 };
 
 export default class ExportLocales {
@@ -62,7 +63,7 @@ export default class ExportLocales {
     const locales = this._locales;
     const mainDir = options.path || get(compiler, 'options.output.path') || '.';
 
-    const { format, encoding } = options;
+    const { format, encoding, eslint } = options;
     const ext = Extension[format];
 
     mkdirp.sync(mainDir);
@@ -75,8 +76,9 @@ export default class ExportLocales {
       const jsonContent = stringify(locales[locale], {
         space: 2,
       });
+
       const result = format === Format.JS
-        ? `module.exports = ${jsonContent};`
+        ? `${eslint === false ? '/* eslint-disable */\n' : ''}module.exports = ${jsonContent};`
         : jsonContent;
 
       try {
@@ -84,7 +86,7 @@ export default class ExportLocales {
         if (currentContent === result) {
           return;
         }
-      } catch(e) {
+      } catch (e) {
         if (e.code !== 'ENOENT') {
           throw e;
         }
