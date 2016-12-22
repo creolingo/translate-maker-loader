@@ -78,7 +78,8 @@ export default function loader() {
   const mergedLocale = mergeLocales(locales, emitter);
 
   const localIdentName = options.localIdentName;
-  const prefix = getLocalIdent(this, dir, localIdentName);
+  const context = options.context;
+  const prefix = getLocalIdent(this, dir, localIdentName, context);
   const defaultLocale = locales.find((locale) => locale.id === options.defaultLocale);
   const value = prepareLocale(mergedLocale, prefix, options.format, defaultLocale.data);
 
