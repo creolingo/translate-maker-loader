@@ -3,7 +3,6 @@ import fs from 'fs';
 import { transform } from 'babel-core';
 import walk from 'walkdir';
 import requireFromString from 'require-from-string';
-import { parseQuery } from 'loader-utils';
 import getLocalIdent from './getLocalIdent';
 import mergeLocales from './mergeLocales';
 import normalizeLocale from './normalizeLocale';
@@ -62,7 +61,7 @@ export function newLoader() {
   const { resourcePath } = this;
   const options = {
     ...DEFAULT_QUERY,
-    ...parseQuery(this.query || '?'),
+    ...this.query,
   };
 
   const resolvedPath = path.resolve(resourcePath);
@@ -103,7 +102,7 @@ export default function loader() {
   const { resourcePath } = this;
   const options = {
     ...DEFAULT_QUERY,
-    ...parseQuery(this.query || '?'),
+    ...this.query,
   };
 
   const resolvedPath = path.resolve(resourcePath);

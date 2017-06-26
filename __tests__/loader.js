@@ -10,7 +10,7 @@ describe('Loader', () => {
     });
 
     const result = loader.call({
-      query: '?' + qs.stringify({
+      query: {
         format: ResponseFormat.FUNCTION,
         localIdentName: '[name]_[hash:base64:7]',
         path: __dirname + '/output',
@@ -18,7 +18,7 @@ describe('Loader', () => {
         babel: {
           presets: ['es2015'],
         },
-      }),
+      },
       addDependency: (file) => {
         console.log('Dependecy: ' + file);
       },
@@ -38,7 +38,7 @@ describe('Loader', () => {
     });
 
     const result = loader.call({
-      query: '?' + qs.stringify({
+      query: {
         format: ResponseFormat.PATH,
         localIdentName: '[name]_[hash:base64:7]',
         path: __dirname + '/output',
@@ -46,7 +46,7 @@ describe('Loader', () => {
         babel: {
           presets: ['es2015'],
         },
-      }),
+      },
       addDependency: (file) => {
         console.log('Dependecy: ' + file);
       },
