@@ -1,5 +1,6 @@
 import dropRightWhile from 'lodash/dropRightWhile';
 import path from 'path';
+import fs from 'fs';
 import { interpolateName } from 'loader-utils';
 
 const LOCALE_DIRNAME = 'locale';
@@ -21,7 +22,10 @@ export default function getLocalIdent(loaderContext, filepath, type, userContext
     context = userContext;
   }
 
-  const filePathJS = `${getPath(filepath)}.js`;
+  const isDir = fs.lstatSync(filepath).isDirectory();
+  const filePathJS = isDir
+    ? `${getPath(filepath)}.js`
+    : filepath;
   const resourcePath = path.relative(typeof context !== 'undefined' ? context : '.', filePathJS);
 
   return interpolateName({

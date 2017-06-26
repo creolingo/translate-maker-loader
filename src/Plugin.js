@@ -44,6 +44,10 @@ export default class ExportLocales {
       }
 
       const currentLocale = locales[locale.id];
+      if (currentLocale[propertyName]) {
+        throw new Error(`${propertyName} already exists`);
+      }
+
       currentLocale[propertyName] = locale.data;
     });
 

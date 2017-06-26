@@ -70,7 +70,6 @@ export function newLoader() {
   };
 
   const resolvedPath = path.resolve(resourcePath);
-  const { dir } = path.parse(resolvedPath);
   const emitter = options.emitErrors
     ? this.emitError
     : this.emitWarning;
@@ -99,7 +98,7 @@ export function newLoader() {
     });
   });
 
-  return this::prepareResponse(locales, options, dir);
+  return this::prepareResponse(locales, options, resolvedPath);
 }
 
 export default function loader() {
