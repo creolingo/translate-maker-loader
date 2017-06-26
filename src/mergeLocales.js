@@ -8,7 +8,7 @@ export default function mergeLocales(locales, emitter) {
   }
 
   const obj = cloneDeep(locales[0].data);
-  for (let i = 1; i < locales.length; i++) {
+  for (let i = 1; i < locales.length; i += 1) {
     const localeBefore = locales[i - 1];
     const locale = locales[i];
     const currentLocale = cloneDeep(locale.data);

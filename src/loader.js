@@ -2,14 +2,14 @@ import path from 'path';
 import fs from 'fs';
 import { transform } from 'babel-core';
 import walk from 'walkdir';
-import getLocalIdent from './getLocalIdent';
+import requireFromString from 'require-from-string';
 import { parseQuery } from 'loader-utils';
+import getLocalIdent from './getLocalIdent';
 import mergeLocales from './mergeLocales';
 import normalizeLocale from './normalizeLocale';
 import generateResponse from './generateResponse';
 import ResponseFormat from './constants/ResponseFormat';
 import prepareLocale from './prepareLocale';
-import requireFromString from 'require-from-string';
 
 const DEFAULT_QUERY = {
   defaultLocale: null,
@@ -22,19 +22,97 @@ const DEFAULT_QUERY = {
   },
 };
 
-export default function loader() {
-  //const callback = this.async();
-  const { resourcePath, addExtractedLocale } = this;
+
+function prepareResponse(locales, options, dir) {
+  const emitter = options.emitErrors
+    ? this.emitError
+    : this.emitWarning;
+
+  const { addExtractedLocale } = this;
+
+  if (!locales.length) {
+    return generateResponse({}, options.format);
+  }
+
+  // normalize locales
+  if (options.normalize) {
+    locales.forEach((locale) => {
+      locale.data = normalizeLocale(locale.data);
+    });
+  }
+
+  // create one big locale merged from all locales, check missing translations and type errors
+  const mergedLocale = mergeLocales(locales, emitter);
+
+  const localIdentName = options.localIdentName;
+  const context = options.context;
+  const prefix = getLocalIdent(this, dir, localIdentName, context);
+  const defaultLocale = locales.find(locale => locale.id === options.defaultLocale);
+  const value = prepareLocale(mergedLocale, prefix, options.format, defaultLocale.data);
+
+  const response = generateResponse(value, options.format);
+  if (addExtractedLocale) {
+    addExtractedLocale(locales, prefix);
+  }
+
+  return response;
+}
+
+export function newLoader() {
+  const { resourcePath } = this;
   const options = {
     ...DEFAULT_QUERY,
     ...parseQuery(this.query || '?'),
   };
-  const resolvedPath = path.resolve(resourcePath);
 
-  const emitter = options.emitErrors ? this.emitError : this.emitWarning;
+  const resolvedPath = path.resolve(resourcePath);
+  const { dir } = path.parse(resolvedPath);
+  const emitter = options.emitErrors
+    ? this.emitError
+    : this.emitWarning;
+
+  // TODO: I am not sure if I need to add it or it is automatically
+  this.addDependency(resolvedPath);
+
+  const babelQuery = options.babel;
+  const fileContent = fs.readFileSync(resolvedPath, { encoding: 'utf8' });
+  const result = transform(fileContent, babelQuery);
+  const content = requireFromString(result.code);
 
   const locales = [];
-  const { dir } = path.parse(resolvedPath);
+
+  Object.keys(content).forEach((locale) => {
+    if (locale === 'default') {
+      emitter(`File ${resolvedPath} contains export default. You need to export locale.`);
+    }
+
+    const data = content[locale];
+
+    locales.push({
+      id: locale,
+      path: resolvedPath,
+      data,
+    });
+  });
+
+  return this::prepareResponse(locales, options, dir);
+}
+
+export default function loader() {
+  // const callback = this.async();
+  const { resourcePath } = this;
+  const options = {
+    ...DEFAULT_QUERY,
+    ...parseQuery(this.query || '?'),
+  };
+
+  const resolvedPath = path.resolve(resourcePath);
+
+  const locales = [];
+  const { dir, name } = path.parse(resolvedPath);
+  if (name !== 'locale') {
+    return this::newLoader();
+  }
 
   walk.sync(dir, (filePath, stats) => {
     if (!stats.isFile()) {
@@ -63,30 +141,5 @@ export default function loader() {
     });
   });
 
-  if (!locales.length) {
-    return generateResponse({}, options.format);
-  }
-
-  // normalize locales
-  if (options.normalize) {
-    locales.forEach((locale) => {
-      locale.data = normalizeLocale(locale.data);
-    });
-  }
-
-  // create one big locale merged from all locales, check missing translations and type errors
-  const mergedLocale = mergeLocales(locales, emitter);
-
-  const localIdentName = options.localIdentName;
-  const context = options.context;
-  const prefix = getLocalIdent(this, dir, localIdentName, context);
-  const defaultLocale = locales.find((locale) => locale.id === options.defaultLocale);
-  const value = prepareLocale(mergedLocale, prefix, options.format, defaultLocale.data);
-
-  const response = generateResponse(value, options.format);
-  if (addExtractedLocale) {
-    addExtractedLocale(locales, prefix);
-  }
-
-  return response;
+  return this::prepareResponse(locales, options, dir);
 }

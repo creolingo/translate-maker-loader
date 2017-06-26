@@ -9,4 +9,6 @@ export default function result(value, format = ResponseFormat.PATH) {
     const content = objectToCode(value);
     return `module.exports = ${content};`;
   }
+
+  return '';
 }

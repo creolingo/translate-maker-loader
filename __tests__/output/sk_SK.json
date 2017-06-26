@@ -1,0 +1,16 @@
+{
+  "translate-maker-loader_2mD9zlS": {
+    "button": {
+      "main": "Hladaj",
+      "next": "Dalej"
+    },
+    "parent1": {
+      "parent2": {
+        "parent3": {
+          "child": "Dieta",
+          "missingEnglishTranslation": "Nieje definovana"
+        }
+      }
+    }
+  }
+}

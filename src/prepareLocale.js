@@ -1,11 +1,11 @@
-import ResponseFormat from './constants/ResponseFormat';
 import get from 'lodash/get';
 import isPlainObject from 'lodash/isPlainObject';
+import ResponseFormat from './constants/ResponseFormat';
 
 export default function prepareLocale(obj, prefix, format, defaultLocale, path) {
   if (!isPlainObject(obj)) {
     const pathWithPrefix = `${prefix}.${path}`;
-    const defaultValue = defaultLocale ? get(defaultLocale, path) : void 0;
+    const defaultValue = defaultLocale ? get(defaultLocale, path) : undefined;
 
     if (format === ResponseFormat.OBJECT) {
       return {

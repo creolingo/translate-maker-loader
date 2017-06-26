@@ -8,7 +8,7 @@ function getPath(filepath) {
   const { dir } = path.parse(filepath);
   const parts = dir.split('/');
 
-  return dropRightWhile(parts, (part) => part === LOCALE_DIRNAME).join('/');
+  return dropRightWhile(parts, part => part === LOCALE_DIRNAME).join('/');
 }
 
 export default function getLocalIdent(loaderContext, filepath, type, userContext) {
@@ -21,7 +21,7 @@ export default function getLocalIdent(loaderContext, filepath, type, userContext
     context = userContext;
   }
 
-  const filePathJS = getPath(filepath) + '.js';
+  const filePathJS = `${getPath(filepath)}.js`;
   const resourcePath = path.relative(typeof context !== 'undefined' ? context : '.', filePathJS);
 
   return interpolateName({

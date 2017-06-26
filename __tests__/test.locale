@@ -1,0 +1,21 @@
+export const en_US = {
+  button: {
+    _main: 'Search',
+    next: 'Next',
+  },
+  "parent1.parent2.parent3": {
+    child: 'Child',
+    missingSlovakTranslation: 'This is missing in the sk_SK',
+  }
+};
+
+export const sk_SK = {
+  button: {
+    _main: 'Hladaj',
+    next: 'Dalej',
+  },
+  "parent1.parent2.parent3": {
+    child: 'Dieta',
+    missingEnglishTranslation: 'Nieje definovana',
+  }
+};

@@ -1,8 +1,6 @@
-// import merge from 'lodash/merge';
 import get from 'lodash/get';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
-import { each } from 'async';
 import keymirror from 'keymirror';
 import stringify from 'json-stable-stringify';
 
