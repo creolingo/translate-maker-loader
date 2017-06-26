@@ -1,6 +1,6 @@
 {
   "name": "translate-maker-loader",
-  "version": "0.2.17",
+  "version": "0.2.18",
   "description": "Locale loader module for webpack",
   "author": {
     "name": "Zlatko Fedor",
@@ -38,7 +38,10 @@
     "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ."
   },
   "jest": {
-    "testPathIgnorePatterns": ["/node_moduels/", "/__tests__/locale/"]
+    "testPathIgnorePatterns": [
+      "/node_moduels/",
+      "/__tests__/locale/"
+    ]
   },
   "dependencies": {
     "async": "^2.5.0",
