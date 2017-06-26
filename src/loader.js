@@ -47,7 +47,12 @@ function prepareResponse(locales, options, dir) {
   const context = options.context;
   const prefix = getLocalIdent(this, dir, localIdentName, context);
   const defaultLocale = locales.find(locale => locale.id === options.defaultLocale);
-  const value = prepareLocale(mergedLocale, prefix, options.format, defaultLocale && defaultLocale.data);
+  if (options.defaultLocale && !defaultLocale) {
+    emitter(`Default locale ${options.defaultLocale} is missing: ${dir}`);
+  }
+
+  const defaultData = defaultLocale && defaultLocale.data;
+  const value = prepareLocale(mergedLocale, prefix, options.format, defaultData);
 
   const response = generateResponse(value, options.format);
   if (addExtractedLocale) {
