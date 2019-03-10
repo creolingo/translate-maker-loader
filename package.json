@@ -1,6 +1,6 @@
 {
   "name": "translate-maker-loader",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Locale loader module for webpack",
   "main": "./dist/index.js",
   "browser": "./lib/index.js",
@@ -98,7 +98,7 @@
     "eslint-plugin-react": "^7.12.4",
     "jest": "^24.3.1",
     "jest-cli": "^24.3.1",
-    "translate-maker": "0.6.2",
+    "translate-maker": "0.6.3",
     "qs": "^6.6.0"
   }
 }
