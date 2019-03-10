@@ -16,7 +16,7 @@ describe('Loader', () => {
         path: __dirname + '/output',
         defaultLocale: 'en_US',
         babel: {
-          presets: ['es2015'],
+          presets: ['@babel/env'],
         },
       },
       addDependency: (file) => {
@@ -44,7 +44,7 @@ describe('Loader', () => {
         path: __dirname + '/output',
         defaultLocale: 'en_US',
         babel: {
-          presets: ['es2015'],
+          presets: ['@babel/env'],
         },
       },
       addDependency: (file) => {

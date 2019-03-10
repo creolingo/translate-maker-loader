@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { transform } from 'babel-core';
+import { transform } from '@babel/core';
 import walk from 'walkdir';
 import requireFromString from 'require-from-string';
 import getLocalIdent from './getLocalIdent';
@@ -17,7 +17,7 @@ const DEFAULT_QUERY = {
   normalize: true,
   ext: '.js',
   babel: {
-    presets: ['es2015'],
+    presets: ['@babel/env'],
   },
 };
 
