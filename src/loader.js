@@ -79,7 +79,10 @@ export function newLoader() {
 
   const babelQuery = options.babel;
   const fileContent = fs.readFileSync(resolvedPath, { encoding: 'utf8' });
-  const result = transform(fileContent, babelQuery);
+  const result = transform(fileContent, {
+    ...babelQuery,
+    filename: resolvedPath,
+  });
   const content = requireFromString(result.code);
 
   const locales = [];

@@ -1,6 +1,6 @@
 {
   "name": "translate-maker-loader",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Locale loader module for webpack",
   "main": "./dist/index.js",
   "browser": "./lib/index.js",
