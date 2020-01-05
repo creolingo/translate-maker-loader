@@ -132,7 +132,10 @@ export default function loader() {
 
     const babelQuery = options.babel;
     const fileContent = fs.readFileSync(filePath, { encoding: 'utf8' });
-    const result = transform(fileContent, babelQuery);
+    const result = transform(fileContent, {
+      ...babelQuery,
+      filename: resolvedPath,
+    });
     const content = requireFromString(result.code);
 
     locales.push({
