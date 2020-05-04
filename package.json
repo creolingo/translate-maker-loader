@@ -34,7 +34,7 @@
     "url": "https://github.com/CherryProjects/translate-maker-loader/issues"
   },
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublish": "npm run snyk-protect && npm run build",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
@@ -42,7 +42,8 @@
     "build:module": "cross-env BABEL_ENV=module ./node_modules/.bin/babel ./src --out-dir ./module --source-maps --copy-files",
     "build:node": "./node_modules/.bin/babel ./src --out-dir ./dist --source-maps --copy-files",
     "build": "npm run build:node && npm run build:browser && npm run build:module",
-    "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ./src"
+    "eslint": "node ./node_modules/eslint/bin/eslint.js --ext .js,.jsx ./src",
+    "snyk-protect": "snyk protect"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -58,7 +59,8 @@
     "keymirror": "^0.1.1",
     "require-from-string": "^2.0.2",
     "json-stable-stringify": "^1.0.1",
-    "walkdir": "^0.4.1"
+    "walkdir": "^0.4.1",
+    "snyk": "^1.317.0"
   },
   "peerDependencies": {
     "@babel/core": "^7.7.7"
@@ -100,5 +102,6 @@
     "jest-cli": "^24.9.0",
     "translate-maker": "0.7.4",
     "qs": "^6.9.1"
-  }
+  },
+  "snyk": true
 }
